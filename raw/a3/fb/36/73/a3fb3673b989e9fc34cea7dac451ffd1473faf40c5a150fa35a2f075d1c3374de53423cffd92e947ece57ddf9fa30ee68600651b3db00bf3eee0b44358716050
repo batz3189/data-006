@@ -1,0 +1,23 @@
+ 阿里云
+
+
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo 
+
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo 
+
+
+
+python的编译安装
+
+tar xf python2.7-tar.gz -C /usr/local
+cd /usr/local/python2.7/
+./configure --prefix=/usr/local/python27 --sysconfdir=/etc
+make && make install
+
+ipython的安装
+
+tar xf ipython.tar.gz -C /usr/local
+cd ipython
+ /usr/local/python27/bin/python2.7 setup.py build
+ /usr/local/python27/bin/python2.7 setup.py install
+ ln /usr/local/python27/bin/ipython  /usr/bin/ipython
