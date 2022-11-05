@@ -1,0 +1,325 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "regdlltest.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPTSTR lpOutBuffer, LPCTSTR lpRegisterCode);
+		SOWFUNCTION GetHardDiskId = (SOWFUNCTION)GetProcAddress( hLib, "GetHardDiskId" );
+		if( GetHardDiskId != NULL )
+		{
+			char diskid[30];
+                        BOOL result = GetHardDiskId(diskid,"USER-123456789");
+	                if(result)
+	                {
+		                Edit1->Text = diskid;
+                        }
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPTSTR lpInBuffer,LPTSTR lpOutBuffer, int length, LPCTSTR lpRegisterCode);
+		SOWFUNCTION MD5Encrypt = (SOWFUNCTION)GetProcAddress( hLib, "MD5Encrypt" );
+		if( MD5Encrypt != NULL )
+		{
+			char InputStr[33];
+	                char OutputStr[33]; // 
+                        AnsiString temp;
+                        temp=Edit2->Text;
+	                strcpy(InputStr,temp.c_str());
+	                BOOL result = MD5Encrypt(InputStr,OutputStr,Edit2->Text.Length(),"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+                                return;
+		        }
+	                Edit3->Text = OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPTSTR lpInBuffer, LPCTSTR lpKey, LPTSTR lpOutBuffer, LPCTSTR lpRegisterCode);
+		SOWFUNCTION BlowFishEncrypt = (SOWFUNCTION)GetProcAddress( hLib, "BlowFishEncrypt" );
+		if( BlowFishEncrypt != NULL )
+		{
+			char InputStr[500] = {'\0'};
+	                char KeyStr[20] = {'\0'};
+	                char OutputStr[1000] = {'\0'};
+                        AnsiString temp1,temp2 ;
+                        temp1=Edit4->Text;
+                        temp2=Edit5->Text;
+	                strcpy(InputStr,temp1.c_str());
+	                strcpy(KeyStr,temp2.c_str());
+	                BOOL result = BlowFishEncrypt(InputStr,KeyStr,OutputStr,"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+	                	return;
+                	}
+	
+	                 Edit6->Text= OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button6Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPTSTR lpInBuffer,LPTSTR lpKey, LPTSTR lpOutBuffer, LPCTSTR lpRegisterCode);
+		SOWFUNCTION EncryptStringFun1 = (SOWFUNCTION)GetProcAddress( hLib, "EncryptStringFun1" );
+		if( EncryptStringFun1 != NULL )
+		{
+			char InputStr[1024] = {'\0'};
+                        char KeyStr[33] = {'\0'};
+	                char OutputStr[2048] = {'\0'};
+                        AnsiString temp;
+                        temp=Edit9->Text;
+                        strcpy(InputStr,temp.c_str());
+                        AnsiString temp2;
+                        temp2=Edit10->Text;
+	                strcpy(KeyStr,temp2.c_str());
+	                BOOL result = EncryptStringFun1(InputStr,KeyStr,OutputStr,"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+                                return;
+		        }
+	                Edit11->Text = OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+
+
+
+
+void __fastcall TForm1::Button7Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPTSTR lpInBuffer,LPTSTR lpKey, LPTSTR lpOutBuffer, LPTSTR lpRegisterCode);
+		SOWFUNCTION DecryptStringFun1 = (SOWFUNCTION)GetProcAddress( hLib, "DecryptStringFun1" );
+		if( DecryptStringFun1 != NULL )
+		{
+			char InputStr[1024] = {'\0'};
+                        char KeyStr[33] = {'\0'};
+	                char OutputStr[2048] = {'\0'};
+                        AnsiString temp;
+                        temp=Edit11->Text;
+                        strcpy(InputStr,temp.c_str());
+                        AnsiString temp2;
+                        temp2=Edit10->Text;
+	                strcpy(KeyStr,temp2.c_str());
+	                BOOL result = DecryptStringFun1(InputStr,KeyStr,OutputStr,"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+                                return;
+		        }
+                        Edit9->Text = OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button4Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPCTSTR lpInBuffer, LPCTSTR D_String, LPCTSTR N_String, int Mode, LPTSTR lpOutBuffer, LPCTSTR lpRegisterCode);
+		SOWFUNCTION RSAEncrypt = (SOWFUNCTION)GetProcAddress( hLib, "RSAEncrypt" );
+		if( RSAEncrypt != NULL )
+		{
+			char InputStr[500] = {'\0'};
+                        char NStr[500] = {'\0'};
+                        char DStr[500] = {'\0'};
+	                char OutputStr[500] = {'\0'};
+                        AnsiString temp1;
+                        temp1=RSA_InputStr->Text;
+                        strcpy(InputStr,temp1.c_str());
+                        AnsiString temp2;
+                        temp2=RSA_NEdit->Text;
+	                strcpy(NStr,temp2.c_str());
+                        AnsiString temp3;
+                        temp3=RSA_DEdit->Text;
+	                strcpy(DStr,temp3.c_str());
+                        
+                        //下面演示代码“加密模式”参数使用Mode0，因此输入参数请使用128bit的N、D参数。
+	                BOOL result = RSAEncrypt(InputStr,DStr,NStr,0,OutputStr,"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+                                return;
+		        }
+	                RSA_OutputStr->Text = OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button5Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPCTSTR lpInBuffer, LPCTSTR N_String, int Mode, LPTSTR lpOutBuffer, LPCTSTR lpRegisterCode);
+		SOWFUNCTION RSADecrypt = (SOWFUNCTION)GetProcAddress( hLib, "RSADecrypt" );
+		if( RSADecrypt != NULL )
+		{
+			char InputStr[500] = {'\0'};
+                        char NStr[500] = {'\0'};
+       	                char OutputStr[500] = {'\0'};
+                        AnsiString temp1;
+                        temp1=RSA_OutputStr->Text;
+                        strcpy(InputStr,temp1.c_str());
+                        AnsiString temp2;
+                        temp2=RSA_NEdit->Text;
+	                strcpy(NStr,temp2.c_str());
+
+                        //下面演示代码“加密模式”参数使用Mode0，因此输入参数请使用128bit的N、D参数。
+	                BOOL result = RSADecrypt(InputStr,NStr,0,OutputStr,"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+                                return;
+		        }
+	                RSA_OutputStr->Text = OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button8Click(TObject *Sender)
+{
+        HINSTANCE hLib = ::LoadLibrary( "reg.dll" );
+	if( hLib != NULL )
+	{
+                typedef BOOL (WINAPI *SOWFUNCTION)(LPTSTR lpInBuffer, LPCTSTR lpKey, LPTSTR lpOutBuffer, LPCTSTR lpRegisterCode);
+		SOWFUNCTION BlowFishDecrypt = (SOWFUNCTION)GetProcAddress( hLib, "BlowFishDecrypt" );
+		if( BlowFishDecrypt != NULL )
+		{
+			char InputStr[500] = {'\0'};
+	                char KeyStr[20] = {'\0'};
+	                char OutputStr[1000] = {'\0'};
+                        AnsiString temp1,temp2 ;
+                        temp1=Edit6->Text;
+                        temp2=Edit5->Text;
+	                strcpy(InputStr,temp1.c_str());
+	                strcpy(KeyStr,temp2.c_str());
+	                BOOL result = BlowFishDecrypt(InputStr,KeyStr,OutputStr,"user-123456789");
+	                if(!result)
+	                {
+	                	ShowMessage("Error! ");
+	                	return;
+                	}
+	
+	                 Edit4->Text= OutputStr;
+                }
+		else
+		{
+			ShowMessage(" 加载功能模块出错! ");
+		}
+	}
+	else
+	{
+                ShowMessage(" 无法加载DLL! ");
+	}
+         ::FreeLibrary( hLib );
+}
+//---------------------------------------------------------------------------
+
